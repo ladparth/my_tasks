@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_tasks/providers/task_provider.dart';
+import 'package:provider/provider.dart';
 
 class NewTaskListButton extends StatelessWidget {
   const NewTaskListButton({super.key});
@@ -9,7 +11,8 @@ class NewTaskListButton extends StatelessWidget {
       onPressed: () {
         showModalBottomSheet(
           context: context,
-          builder: (context) => const NewListSheet(),
+          isScrollControlled: true,
+          builder: (context) => NewListSheet(),
         );
       },
       child: Row(
@@ -30,40 +33,61 @@ class NewTaskListButton extends StatelessWidget {
   }
 }
 
-class NewListSheet extends StatelessWidget {
+class NewListSheet extends StatefulWidget {
   const NewListSheet({super.key});
 
   @override
+  State<NewListSheet> createState() => _NewListSheetState();
+}
+
+class _NewListSheetState extends State<NewListSheet> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.7,
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Enter list name',
-              border: InputBorder.none,
-            ),
-            style: TextStyle(fontSize: 18),
+      child: SingleChildScrollView(
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.7,
           ),
-          const SizedBox(height: 10),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Save',
-                style: TextStyle(fontSize: 20),
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _controller,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Enter list name',
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(fontSize: 18),
               ),
-            ),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: TextButton(
+                  onPressed: () {
+                    final name = _controller.text.trim();
+                    if (name.isNotEmpty) {
+                      Provider.of<TaskProvider>(context, listen: false)
+                          .addTaskList(name);
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text(
+                    'Save',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
