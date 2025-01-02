@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:my_tasks/providers/task_provider.dart';
 import 'package:my_tasks/widgets/task_items/task_items.dart';
+import 'package:provider/provider.dart';
 
 class CurrentTasks extends StatelessWidget {
   const CurrentTasks({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final int taskCount = 5;
+    final taskProvider = Provider.of<TaskProvider>(context);
+    final inCompleteTasks = taskProvider.getIncompleteTasks();
+    final taskCount = inCompleteTasks.length;
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -25,7 +29,7 @@ class CurrentTasks extends StatelessWidget {
             )
           : Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0),
-              child: TaskListView(taskCount: taskCount),
+              child: TaskListView(tasks: inCompleteTasks),
             ),
     );
   }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:my_tasks/models/task.dart';
+import 'package:my_tasks/providers/task_provider.dart';
 import 'package:my_tasks/screens/task_detail.dart';
+import 'package:provider/provider.dart';
 
 class TaskListView extends StatelessWidget {
-  final int taskCount;
-  const TaskListView({super.key, required this.taskCount});
+  final List<Task> tasks;
+  const TaskListView({super.key, required this.tasks});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +17,11 @@ class TaskListView extends StatelessWidget {
       child: ListView.builder(
         shrinkWrap: true,
         padding: EdgeInsets.symmetric(horizontal: 5),
-        itemCount: taskCount,
+        itemCount: tasks.length,
         itemBuilder: (context, index) {
-          return TaskItem();
+          return TaskItem(
+            task: tasks[index],
+          );
         },
       ),
     );
@@ -24,27 +29,48 @@ class TaskListView extends StatelessWidget {
 }
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({super.key});
+  final Task task;
+  const TaskItem({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
+    final taskProvider = Provider.of<TaskProvider>(context);
+    final taskList = taskProvider.selectedTaskList;
+    final taskListId = taskList?.id;
+
     return ListTile(
       leading: Checkbox(
-        value: false,
+        value: task.isCompleted,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(100),
         ),
-        onChanged: (value) {},
+        onChanged: (value) {
+          taskProvider.toggleIsCompleted(taskListId!, task.id);
+        },
       ),
-      title: Text('Task 1'),
+      title: Text(
+        task.title,
+        style: TextStyle(
+          decoration: task.isCompleted
+              ? TextDecoration.lineThrough
+              : TextDecoration.none,
+          fontStyle: task.isCompleted ? FontStyle.italic : FontStyle.normal,
+        ),
+      ),
       trailing: IconButton(
-        icon: Icon(Icons.star_border),
-        onPressed: () {},
+        icon: task.isFavorite ? Icon(Icons.star) : Icon(Icons.star_border),
+        onPressed: () {
+          taskProvider.toggleIsFavorite(taskListId!, task.id);
+        },
       ),
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => TaskDetail()),
+          MaterialPageRoute(
+              builder: (context) => TaskDetail(
+                    taskListId: taskListId!,
+                    task: task,
+                  )),
         );
       },
       shape: RoundedRectangleBorder(

@@ -14,8 +14,8 @@ class Task {
     this.dueDate,
     this.isCompleted = false,
     this.isFavorite = false,
-    this.subtasks = const [],
-  });
+    List<SubTask>? subtasks,
+  }) : subtasks = subtasks ?? [];
 }
 
 class SubTask {
@@ -38,6 +38,6 @@ class TaskList {
   TaskList({
     required this.id,
     required this.name,
-    this.tasks = const [],
-  });
+    List<Task>? tasks,
+  }) : tasks = tasks ?? [];
 }
