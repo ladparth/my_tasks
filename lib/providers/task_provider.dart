@@ -7,7 +7,7 @@ import 'dart:convert';
 class TaskProvider with ChangeNotifier {
   final List<TaskList> _taskLists = [];
   final Uuid _uuid = Uuid();
-  late TaskList _selectedTaskList;
+  TaskList? _selectedTaskList;
 
   TaskProvider() {
     _initializeData();
@@ -193,11 +193,17 @@ class TaskProvider with ChangeNotifier {
   }
 
   List<Task> getCompletedTasks() {
-    return _selectedTaskList.tasks.where((task) => task.isCompleted).toList();
+    return _selectedTaskList?.tasks
+            .where((task) => task.isCompleted)
+            .toList() ??
+        [];
   }
 
   List<Task> getIncompleteTasks() {
-    return _selectedTaskList.tasks.where((task) => !task.isCompleted).toList();
+    return _selectedTaskList?.tasks
+            .where((task) => !task.isCompleted)
+            .toList() ??
+        [];
   }
 
   void moveTask(String fromTaskListId, String toTaskListId, String taskId) {

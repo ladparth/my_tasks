@@ -97,7 +97,6 @@ class _TaskDetailState extends State<TaskDetail> {
               onPressed: () {
                 taskProvider.toggleIsCompleted(
                     widget.taskListId, widget.task.id);
-                Navigator.pop(context);
               },
               child: Text(
                 widget.task.isCompleted ? 'Mark uncompleted' : 'Mark completed',
