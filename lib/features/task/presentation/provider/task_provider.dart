@@ -20,7 +20,7 @@ class TaskProvider extends ChangeNotifier {
     _init();
   }
 
-  final List<TaskEntity> _tasks = [];
+  List<TaskEntity> _tasks = [];
 
   List<TaskEntity> get tasks => _tasks;
 
@@ -31,8 +31,7 @@ class TaskProvider extends ChangeNotifier {
   Future<void> getTasks() async {
     try {
       final tasks = await _getTasks();
-      _tasks.clear();
-      _tasks.addAll(tasks);
+      _tasks = tasks;
       notifyListeners();
     } catch (e) {
       print("Error getting tasks: $e");

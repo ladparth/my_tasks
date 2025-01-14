@@ -19,7 +19,7 @@ class ListProvider extends ChangeNotifier {
     _init();
   }
 
-  final List<ListEntity> _lists = [];
+  List<ListEntity> _lists = [];
 
   List<ListEntity> get lists => _lists;
 
@@ -30,8 +30,7 @@ class ListProvider extends ChangeNotifier {
   Future<void> getLists() async {
     try {
       final lists = await _getLists();
-      lists.clear();
-      lists.addAll(lists);
+      _lists = lists;
       notifyListeners();
     } catch (e) {
       print("Failed to get lists: $e");
