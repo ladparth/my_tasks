@@ -31,4 +31,22 @@ class TaskModel extends TaskEntity {
       'isFavorite': isFavorite,
     };
   }
+
+  TaskModel copyWith({
+    String? id,
+    String? listId,
+    String? title,
+    String? description,
+    bool? isCompleted,
+    bool? isFavorite,
+  }) {
+    return TaskModel(
+      id: id ?? this.id,
+      listId: listId ?? this.listId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      isCompleted: isCompleted ?? this.isCompleted,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 }

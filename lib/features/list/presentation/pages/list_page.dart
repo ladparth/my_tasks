@@ -19,9 +19,13 @@ class ListPage extends StatelessWidget {
         ),
       ),
       body: ListView.builder(
+        padding: EdgeInsets.all(16),
         itemCount: lists.length,
         itemBuilder: (context, index) {
-          return ListCard(list: lists[index]);
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: ListCard(list: lists[index]),
+          );
         },
       ),
       floatingActionButton: NewListButton(

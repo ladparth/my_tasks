@@ -9,11 +9,14 @@ class ProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TaskProvider>();
-    final tasks = provider.tasks;
-    final tasksInList = tasks.where((task) => task.listId == listId);
-    final completedTasks = tasksInList.where((task) => task.isCompleted).length;
+
+    final tasksInList = provider.getTasksByList(listId);
+    final completedTasks = provider.getCompletedTasks(listId);
     final totalTasks = tasksInList.length;
-    final double progress = totalTasks == 0 ? 0 : completedTasks / totalTasks;
+    final completedTasksLength = completedTasks.length;
+    final double progress =
+        totalTasks == 0 ? 0 : completedTasksLength / totalTasks;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,7 +32,7 @@ class ProgressBar extends StatelessWidget {
         Text(
           totalTasks == 0
               ? 'No tasks yet. Start by adding one!'
-              : '$completedTasks of $totalTasks tasks completed',
+              : '$completedTasksLength of $totalTasks tasks completed',
           style: TextStyle(
             fontSize: 14,
             color: Theme.of(context).colorScheme.outline,
